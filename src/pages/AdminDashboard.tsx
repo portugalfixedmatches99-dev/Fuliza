@@ -16,7 +16,7 @@ type Boost = {
 const fetchAllBoosts = async (startDate?: string, endDate?: string): Promise<Boost[]> => {
   let url = startDate && endDate
     ? `${BASE_URL}/paid/filter?startDate=${startDate}&endDate=${endDate}`
-    : BASE_URL;
+    : `${BASE_URL}/api/boosts`;
   const res = await fetch(url);
   return res.json();
 };
