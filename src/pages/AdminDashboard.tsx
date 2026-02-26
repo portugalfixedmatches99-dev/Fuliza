@@ -12,13 +12,17 @@ type Boost = {
   mpesaReceipt: string | null;
   paid: boolean;
 };
-
 const fetchAllBoosts = async (startDate?: string, endDate?: string): Promise<Boost[]> => {
   let url = startDate && endDate
-    ? `${BASE_URL}/paid/filter?startDate=${startDate}&endDate=${endDate}`
-    : `${BASE_URL}/api/boosts`;
+    ? `${BASE_URL}/api/boosts/paid/filter?startDate=${startDate}&endDate=${endDate}`
+    : `${BASE_URL}/api/boosts`;  // ← this should already be correct
+  
+  console.log("Fetching from:", url); // 👈 add this to debug
   const res = await fetch(url);
-  return res.json();
+  console.log("Response status:", res.status); // 👈 and this
+  const data = await res.json();
+  console.log("Data received:", data); // 👈 and this
+  return data;
 };
 
 const StatusBadge = ({ status }: { status: string }) => {
