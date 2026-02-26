@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-const BASE_URL = "https://fulz.onrender.com/api/boosts";
+const BASE_URL = "https://captainbackend.onrender.com";
 
 type Boost = {
   id: number;
