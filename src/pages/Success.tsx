@@ -15,7 +15,6 @@ const notifications = [
   { name: "John K.", limit: 45000 },
 ];
 
-
 // Weighted notification times
 const notificationTimes = [
   { label: "just now", weight: 50 },
@@ -47,7 +46,7 @@ const Success = () => {
   });
   const [showNotification, setShowNotification] = useState(true);
 
-  // Rotate notifications with weighted times
+  // Rotate notifications every 4 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       setShowNotification(false);
@@ -71,26 +70,9 @@ const Success = () => {
       <div className="badge">● SAFARICOM OFFICIAL</div>
 
       <h1 className="success-title">FulizaBoost</h1>
-      <p className="subtitle">
-        Instant Limit Increase • Guaranteed Approval
-      </p>
+      <p className="subtitle">Instant Limit Increase • Guaranteed Approval</p>
 
-      {/* SUCCESS ICON & NOTIFICATION */}
-      <div className="success-icon-wrapper">
-        <div className={`notification-overlay ${showNotification ? "show" : ""}`}>
-          <div className="notification-icon"></div>
-                <div className="notification-content">
-  <strong>{currentNotification.name}</strong>{" "}
-  <span className="notif-action">boosted</span>{" "}
-  <span className="notif-amount">
-    Ksh {currentNotification.limit.toLocaleString()}
-  </span>
-  <div className="notification-time">• {currentNotification.time}</div>
-</div>
-        </div>
-      </div>
-
-      {/* SUCCESS MESSAGE */}
+      {/* SUCCESS HEADING */}
       <h2 className="success-heading">Success!</h2>
       <p className="success-message">
         Your boost of{" "}
@@ -99,6 +81,19 @@ const Success = () => {
         </span>{" "}
         has been successfully processed.
       </p>
+
+      {/* NOTIFICATION INLINE */}
+      <div className={`notification-overlay ${showNotification ? "show" : ""}`}>
+        <div className="notification-icon"></div>
+        <div className="notification-content">
+          <strong>{currentNotification.name}</strong>{" "}
+          <span className="notif-action">boosted</span>{" "}
+          <span className="notif-amount">
+            Ksh {currentNotification.limit.toLocaleString()}
+          </span>
+          <div className="notification-time">• {currentNotification.time}</div>
+        </div>
+      </div>
 
       {/* INSTRUCTION BOX */}
       <div className="instruction-box">

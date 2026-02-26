@@ -125,16 +125,17 @@ const Confirmation = () => {
         <h1 className="title">FulizaBoost</h1>
         <p className="subtitle">Instant Limit Increase • Guaranteed Approval</p>
       </div>
-
-      {/* NOTIFICATION OVERLAY */}
-      <div className={`notification-overlay ${showNotification ? "show" : ""}`}>
-        <div className="notification-icon"></div>
-        <div className="notification-content">
-          <strong>{currentNotification.phone}</strong> increased to Ksh{" "}
-          {currentNotification.limit.toLocaleString()}
-          <div className="notification-time">• {currentNotification.time}</div>
-        </div>
-      </div>
+{/* NOTIFICATION CARD */}
+<div className="notification-card">
+  <div className="notification-overlay ticker">
+    <div className="notification-icon">⚡</div>
+    <div className="notification-content">
+      <strong>{currentNotification.phone}</strong> increased to Ksh{" "}
+      {currentNotification.limit.toLocaleString()}
+      <span className="notification-time"> • {currentNotification.time}</span>
+    </div>
+  </div>
+</div>
 
       <hr />
 

