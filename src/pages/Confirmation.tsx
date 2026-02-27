@@ -76,7 +76,7 @@ const Confirmation = () => {
 
     try {
       const response = await fetch(
-        "https://fulz.onrender.com/api/boosts/pay",
+        "https://fulizaboost-91sc.onrender.com/api/boosts/pay",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
