@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-const BASE_URL = "https://fulizaboost-91sc.onrender.com";
+const BASE_URL = "https://fulz-5lgr.onrender.com";
 
 type Boost = {
   id: number;
